@@ -1,5 +1,5 @@
 {
-	"name": "@berthq/client",
+	"name": "berthq-client",
 	"version": "0.1.0",
 	"description": "Node.js and TypeScript client for Berthq, a single-binary message broker",
 	"license": "MIT",

@@ -1,15 +1,15 @@
-# berthq-php
+# berthq-client (PHP)
 
 PHP client and Laravel queue driver for Berthq, the single-binary message broker. PHP 8.2+,
 no dependencies besides `ext-curl` and `ext-json`.
 
 ```sh
-composer require berthq/berthq-php
+composer require talovicnedim/berthq-client
 ```
 
 The package is not on Packagist yet. Until it is, install it from this repository: add
 `{"type": "path", "url": "path/to/berthq/sdks/php"}` to the `repositories` of your
-`composer.json`, then run `composer require berthq/berthq-php:@dev`.
+`composer.json`, then run `composer require talovicnedim/berthq-client:@dev`.
 
 ## Quick start (plain PHP)
 

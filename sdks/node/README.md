@@ -1,4 +1,4 @@
-# @berthq/client
+# berthq-client (Node.js)
 
 Node.js and TypeScript client for Berthq, a message broker in one binary. No dependencies: it
 uses the global `fetch` of Node 18+ (and works in Deno, Bun and browsers too).
@@ -9,7 +9,7 @@ the other SDKs: `queues.create`, `publish`, `consume`, `ack`, `nack`, `consumers
 ## Install
 
 ```sh
-npm install @berthq/client
+npm install berthq-client
 ```
 
 ## Quick start
@@ -17,7 +17,7 @@ npm install @berthq/client
 Start a broker (`berthq start`), then publish:
 
 ```ts
-import { Client } from '@berthq/client';
+import { Client } from 'berthq-client';
 
 const client = new Client(); // http://127.0.0.1:7331
 await client.queues.create('emails', { maxAttempts: 3 });
@@ -27,7 +27,7 @@ await client.publish('emails', { body: { user: 123 } });
 And process messages with a worker:
 
 ```ts
-import { Client } from '@berthq/client';
+import { Client } from 'berthq-client';
 
 const client = new Client('http://127.0.0.1:7331', { apiKey: process.env.BERTHQ_API_KEY });
 const controller = new AbortController();
@@ -213,7 +213,7 @@ await client.stats(); // totals, rates, free disk space and the last minute of t
 Every failed call rejects with a `BerthqError`:
 
 ```ts
-import { BerthqError } from '@berthq/client';
+import { BerthqError } from 'berthq-client';
 
 try {
 	await client.queues.create('emails');

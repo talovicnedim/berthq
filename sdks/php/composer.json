@@ -1,5 +1,5 @@
 {
-	"name": "berthq/berthq-php",
+	"name": "talovicnedim/berthq-client",
 	"description": "PHP client and Laravel queue driver for Berthq, a single-binary message broker",
 	"type": "library",
 	"license": "MIT",
