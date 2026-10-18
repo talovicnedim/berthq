@@ -1,0 +1,140 @@
+# Berthq on Kubernetes: one broker with its own disk, reachable only inside the cluster.
+#
+#   kubectl create secret generic berthq-api-keys \
+#     --from-literal=BERTHQ_API_KEYS="admin:$(openssl rand -hex 24),publish+consume:$(openssl rand -hex 24)"
+#   kubectl apply -f berthq.yaml
+#
+# Apps connect to http://berthq:7331. Pods need the label berthq-client: "true" to get through
+# the NetworkPolicy. For the dashboard: kubectl port-forward svc/berthq 7331
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: berthq
+  labels:
+    app.kubernetes.io/name: berthq
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: berthq
+  ports:
+    - name: http
+      port: 7331
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: berthq
+  labels:
+    app.kubernetes.io/name: berthq
+spec:
+  # Exactly one: Berthq is a single node, and two pods must never share one data file.
+  replicas: 1
+  serviceName: berthq
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: berthq
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: berthq
+    spec:
+      # Longer than --shutdown-timeout, so messages in flight can be acked before the pod stops.
+      terminationGracePeriodSeconds: 30
+      # Berthq never calls the Kubernetes API, so the pod gets no token for it.
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      # Kubernetes waits 5 minutes before it moves pods off a node that stopped answering.
+      # 30 seconds brings Berthq back sooner; senders retry in the meantime.
+      tolerations:
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 30
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 30
+      containers:
+        - name: berthq
+          # A fixed version, so a restarted pod never pulls a different one. Change it to upgrade.
+          image: ghcr.io/talovicnedim/berthq:0.1.0
+          ports:
+            - name: http
+              containerPort: 7331
+          env:
+            - name: BERTHQ_SHUTDOWN_TIMEOUT
+              value: 20s
+            # Publishing stops while less than this is free on the volume below; keep it well
+            # under the volume size.
+            - name: BERTHQ_MIN_FREE_DISK
+              value: 1GB
+            - name: BERTHQ_API_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: berthq-api-keys
+                  key: BERTHQ_API_KEYS
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 10Gi
+---
+# Only pods labelled berthq-client: "true" in this namespace can reach the broker. Needs a
+# network plugin that enforces NetworkPolicy (most managed clusters have one).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: berthq
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: berthq
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              berthq-client: 'true'
+      ports:
+        - port: 7331

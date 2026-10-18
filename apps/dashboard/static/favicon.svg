@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b2b3a"/>
+      <stop offset="1" stop-color="#121218"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7dd3fc"/>
+      <stop offset="1" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="190" fill="url(#bg)"/>
+  <rect x="100.5" y="100.5" width="823" height="823" rx="189.5" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="3"/>
+  <rect x="220" y="372" width="140" height="140" rx="36" fill="#e4e4e9" fill-opacity="0.3"/>
+  <rect x="396" y="372" width="140" height="140" rx="36" fill="#e4e4e9" fill-opacity="0.6"/>
+  <rect x="572" y="372" width="140" height="140" rx="36" fill="url(#accent)"/>
+  <rect x="740" y="300" width="64" height="420" rx="32" fill="#e4e4e9"/>
+  <path d="M220 616 Q278 576 336 616 T452 616 T568 616 T684 616" fill="none" stroke="url(#accent)" stroke-opacity="0.7" stroke-width="32" stroke-linecap="round"/>
+  <path d="M280 704 Q338 664 396 704 T512 704 T628 704" fill="none" stroke="url(#accent)" stroke-opacity="0.35" stroke-width="32" stroke-linecap="round"/>
+</svg>

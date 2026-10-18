@@ -1,0 +1,18 @@
+version: 2
+updates:
+  # Propose updates to pinned action SHAs as one reviewable PR a month.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
+  # The Dockerfile pins its base images by digest; this keeps them patched.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      images:
+        patterns: ['*']

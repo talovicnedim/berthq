@@ -1,0 +1,61 @@
+{
+	"name": "berthq/berthq-php",
+	"description": "PHP client and Laravel queue driver for Berthq, a single-binary message broker",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Nedim Talovic"
+		}
+	],
+	"homepage": "https://github.com/talovicnedim/berthq/tree/main/sdks/php",
+	"support": {
+		"issues": "https://github.com/talovicnedim/berthq/issues",
+		"source": "https://github.com/talovicnedim/berthq/tree/main/sdks/php",
+		"docs": "https://github.com/talovicnedim/berthq/blob/main/docs/api.md"
+	},
+	"keywords": [
+		"queue",
+		"message broker",
+		"laravel",
+		"jobs"
+	],
+	"require": {
+		"php": "^8.2",
+		"ext-curl": "*",
+		"ext-json": "*"
+	},
+	"require-dev": {
+		"illuminate/config": "^11.0 || ^12.0",
+		"illuminate/container": "^11.0 || ^12.0",
+		"illuminate/events": "^11.0 || ^12.0",
+		"illuminate/queue": "^11.0 || ^12.0",
+		"illuminate/support": "^11.0 || ^12.0",
+		"phpunit/phpunit": "^11.0"
+	},
+	"suggest": {
+		"illuminate/queue": "To use Berthq as a Laravel queue connection (Laravel 11 or 12)"
+	},
+	"autoload": {
+		"psr-4": {
+			"Berthq\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Berthq\\Tests\\": "tests/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Berthq\\Laravel\\BerthqServiceProvider"
+			]
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true
+}

@@ -1,0 +1,9 @@
+target
+node_modules
+**/node_modules
+apps/dashboard/build
+apps/dashboard/.svelte-kit
+data
+.git
+.claude
+CLAUDE.md

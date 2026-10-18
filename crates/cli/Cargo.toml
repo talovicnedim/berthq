@@ -1,0 +1,37 @@
+[package]
+name = "berthq-cli"
+description = "The berthq binary: runs the server and talks to it"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "berthq"
+path = "src/main.rs"
+
+[dependencies]
+berthq-server.workspace = true
+clap = { version = "4", features = ["derive", "env"] }
+berthq-client.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio = { workspace = true, features = ["io-util", "process"] }
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Sends Ctrl-C on to a `consume --exec` command, which runs in its own process group. Already
+# in the build through fs4; std has no safe way to signal a process group.
+[target.'cfg(unix)'.dependencies]
+rustix = { version = "1", features = ["process"] }
+
+[dev-dependencies]
+axum.workspace = true
+berthq-core.workspace = true
+tokio = { workspace = true, features = ["net"] }
+
+[lints]
+workspace = true

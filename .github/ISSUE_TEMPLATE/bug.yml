@@ -1,0 +1,31 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Berthq version
+      description: '`berthq --version`, or the Docker image tag'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: How do you run it?
+      placeholder: Docker on Ubuntu 24.04, binary on macOS 15 (Apple Silicon), Kubernetes, …
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: The commands or requests that show the problem (`berthq` CLI, `curl` or SDK code), and the SDK and its version if one is involved.
+      render: shell
+  - type: textarea
+    attributes:
+      label: Logs and anything else
+      description: Please remove API keys, message bodies, hostnames or anything else you don't want to share.

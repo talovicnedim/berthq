@@ -1,0 +1,13 @@
+pnpm-lock.yaml
+target/
+node_modules/
+.svelte-kit/
+build/
+LICENSE
+data/
+apps/dashboard/src/lib/api/types.ts
+apps/dashboard/src/lib/components/ui/
+sdks/php/vendor/
+sdks/php/.phpunit.cache/
+sdks/python/.venv/
+sdks/node/dist/

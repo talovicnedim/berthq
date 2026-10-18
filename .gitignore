@@ -1,0 +1,39 @@
+# Rust
+/target/
+
+# Node
+node_modules/
+.pnpm-store/
+
+# SvelteKit / Vite
+.svelte-kit/
+build/
+dist/
+
+# Berthq data directories from local runs
+/data/
+*.redb
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# Throwaway TLS files the HTTP/2 tests need; not secret.
+!crates/server/tests/fixtures/*.pem
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Claude Code: local AI assistant setup, not part of the project
+.claude/
+.agent-engineering/
+CLAUDE.md
+CLAUDE.local.md
+
+# Vite
+vite.config.ts.timestamp-*

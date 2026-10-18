@@ -1,0 +1,13 @@
+name: Feature request
+description: An idea to make Berthq more useful
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: What do you want to do?
+      description: Describe the task or problem, not just the solution. How do you do it today?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Ideas for how it could work

@@ -1,0 +1,43 @@
+[workspace]
+resolver = "3"
+members = ["crates/core", "crates/server", "crates/cli", "sdks/rust"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+license = "MIT"
+authors = ["Nedim Talovic"]
+repository = "https://github.com/talovicnedim/berthq"
+# Not on crates.io: path dependencies have no versions, and the Rust SDK installs from git.
+publish = false
+
+[workspace.dependencies]
+berthq-core = { path = "crates/core" }
+berthq-server = { path = "crates/server" }
+berthq-client = { path = "sdks/rust" }
+axum = "0.8"
+# rustls with the ring provider only: the default `rustls` features pull in aws-lc-rs. HTTP/2 is
+# picked over TLS through ALPN; cleartext stays HTTP/1.1 unless a client asks for prior knowledge.
+reqwest = { version = "0.13", default-features = false, features = ["json", "rustls-no-provider", "http2"] }
+rustls = { version = "0.23", default-features = false, features = ["ring"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order", "raw_value"] }
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "signal", "sync", "time"] }
+tracing = "0.1"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "warn"
+panic = "deny"
+dbg_macro = "deny"
+print_stdout = "deny"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true

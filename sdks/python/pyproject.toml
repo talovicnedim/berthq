@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "berthq-client"
+version = "0.1.0"
+description = "Python client for Berthq, a message broker in one binary"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Nedim Talovic" }]
+requires-python = ">=3.9"
+dependencies = []
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/talovicnedim/berthq/tree/main/sdks/python"
+Source = "https://github.com/talovicnedim/berthq"
+Issues = "https://github.com/talovicnedim/berthq/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["berthq_client"]

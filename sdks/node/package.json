@@ -1,0 +1,46 @@
+{
+	"name": "@berthq/client",
+	"version": "0.1.0",
+	"description": "Node.js and TypeScript client for Berthq, a single-binary message broker",
+	"license": "MIT",
+	"author": "Nedim Talovic",
+	"homepage": "https://github.com/talovicnedim/berthq/tree/main/sdks/node#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/talovicnedim/berthq.git",
+		"directory": "sdks/node"
+	},
+	"bugs": {
+		"url": "https://github.com/talovicnedim/berthq/issues"
+	},
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"engines": {
+		"node": ">=18"
+	},
+	"scripts": {
+		"clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+		"build": "tsc -p tsconfig.json",
+		"prepack": "npm run clean && npm run build",
+		"test": "vitest run",
+		"typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json --noEmit"
+	},
+	"devDependencies": {
+		"@types/node": "^26.6.5",
+		"typescript": "^7.0.2",
+		"vitest": "^4.1.11"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

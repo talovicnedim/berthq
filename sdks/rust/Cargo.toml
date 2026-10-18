@@ -1,0 +1,30 @@
+[package]
+name = "berthq-client"
+description = "Rust client for Berthq, the single-binary message broker"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+reqwest.workspace = true
+rustls.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+# Timers for the `process` worker and file writes for `backup`; reqwest already runs on tokio.
+tokio = { workspace = true, features = ["time", "fs", "io-util"] }
+# The `process` worker logs the failures it recovers from.
+tracing.workspace = true
+
+[dev-dependencies]
+axum.workspace = true
+berthq-core.workspace = true
+berthq-server.workspace = true
+tokio = { workspace = true, features = ["net"] }
+
+[lints]
+workspace = true

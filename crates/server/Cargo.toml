@@ -1,0 +1,38 @@
+[package]
+name = "berthq-server"
+description = "HTTP API, live events, metrics and dashboard for Berthq"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+axum.workspace = true
+# TLS for `berthq start --tls-cert/--tls-key`, built on rustls.
+axum-server = { version = "0.8", features = ["tls-rustls-no-provider"] }
+berthq-core.workspace = true
+# Streams for server-sent events; already in the tree through axum.
+futures-util = { version = "0.3", default-features = false }
+# The timer for the request head and HTTP/2 ping timeouts; already in the tree through axum-server.
+hyper-util = { version = "0.1", features = ["tokio"] }
+rustls.workspace = true
+# Serves the built dashboard from inside the binary.
+rust-embed = { version = "8", features = ["mime-guess"] }
+serde.workspace = true
+serde_json.workspace = true
+tokio = { workspace = true, features = ["net", "fs", "io-util"] }
+tracing.workspace = true
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"
+# Paused time for the connection timeout tests in serve_tests.rs.
+tokio = { workspace = true, features = ["test-util"] }
+# Checks HTTP/1.1 and HTTP/2 against a real listener (tests/http2.rs).
+reqwest.workspace = true
+
+[lints]
+workspace = true
