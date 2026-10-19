@@ -7,9 +7,8 @@ no dependencies besides `ext-curl` and `ext-json`.
 composer require talovicnedim/berthq-client
 ```
 
-The package is not on Packagist yet. Until it is, install it from this repository: add
-`{"type": "path", "url": "path/to/berthq/sdks/php"}` to the `repositories` of your
-`composer.json`, then run `composer require talovicnedim/berthq-client:@dev`.
+The source lives in [`sdks/php`](https://github.com/talovicnedim/berthq/tree/main/sdks/php) of
+the Berthq repository; open issues and pull requests there.
 
 ## Quick start (plain PHP)
 

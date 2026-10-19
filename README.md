@@ -232,13 +232,13 @@ await publisher.close();
 
 ### SDKs
 
-| Language               | Install                                                                                  |
-| ---------------------- | ---------------------------------------------------------------------------------------- |
-| PHP and Laravel        | `composer require talovicnedim/berthq-client` ([docs](sdks/php))                         |
-| Node.js and TypeScript | `npm install berthq-client` ([docs](sdks/node))                                          |
-| Python                 | `pip install berthq-client` ([docs](sdks/python))                                        |
-| Go                     | `go get github.com/talovicnedim/berthq/sdks/go` ([docs](sdks/go))                        |
-| Rust                   | `berthq-client = { git = "https://github.com/talovicnedim/berthq" }` ([docs](sdks/rust)) |
+| Language               | Install                                                           |
+| ---------------------- | ----------------------------------------------------------------- |
+| PHP and Laravel        | `composer require talovicnedim/berthq-client` ([docs](sdks/php))  |
+| Node.js and TypeScript | `npm install berthq-client` ([docs](sdks/node))                   |
+| Python                 | `pip install berthq-client` ([docs](sdks/python))                 |
+| Go                     | `go get github.com/talovicnedim/berthq/sdks/go` ([docs](sdks/go)) |
+| Rust                   | `cargo add berthq-client` ([docs](sdks/rust))                     |
 
 Laravel workers use the `berthq` queue driver:
 

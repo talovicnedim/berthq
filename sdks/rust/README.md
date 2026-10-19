@@ -2,9 +2,8 @@
 
 Rust client for Berthq, the single-binary message broker. Async, built on `reqwest` and `tokio`.
 
-```toml
-[dependencies]
-berthq-client = { git = "https://github.com/talovicnedim/berthq" }
+```sh
+cargo add berthq-client
 ```
 
 ## Quick start
