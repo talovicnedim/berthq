@@ -37,7 +37,7 @@ final class BerthqConnector implements ConnectorInterface
             retryAfter: isset($config['retry_after']) ? (int) $config['retry_after'] : null,
             consumer: (string) ($config['consumer'] ?? 'default'),
             worker: $config['worker'] ?? null,
-            createQueues: (bool) ($config['create_queues'] ?? false),
+            createQueues: (bool) ($config['create_queues'] ?? true),
             deadLetter: (bool) ($config['dead_letter'] ?? true),
             dispatchAfterCommit: $config['after_commit'] ?? null,
         );

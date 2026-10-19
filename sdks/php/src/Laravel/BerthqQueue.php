@@ -31,7 +31,7 @@ final class BerthqQueue extends Queue implements QueueContract, ClearableQueue
      *                             visibility timeout. Keep it above your jobs' `--timeout`.
      * @param string $consumer The consumer whose position the workers share.
      * @param string|null $worker Worker name shown in the dashboard; null is `host:pid`.
-     * @param bool $createQueues Create a missing berthq queue on first use instead of failing.
+     * @param bool $createQueues Create a missing berthq queue on first use (false: fail).
      * @param bool $deadLetter Keep failed jobs in `<queue>.dlq` (true) or delete them (false).
      */
     public function __construct(
@@ -41,7 +41,7 @@ final class BerthqQueue extends Queue implements QueueContract, ClearableQueue
         private readonly ?int $retryAfter = null,
         private readonly string $consumer = 'default',
         private readonly ?string $worker = null,
-        private readonly bool $createQueues = false,
+        private readonly bool $createQueues = true,
         private readonly bool $deadLetter = true,
         ?bool $dispatchAfterCommit = false,
     ) {

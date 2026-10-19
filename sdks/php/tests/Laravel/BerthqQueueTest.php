@@ -58,7 +58,8 @@ final class BerthqQueueTest extends TestCase
                 'berthq-retry' => ['driver' => 'berthq', 'url' => $url, 'queue' => $this->queueName, 'wait' => 2],
                 'berthq-no-dlq' => ['driver' => 'berthq', 'url' => $url, 'queue' => $this->queueName, 'wait' => 2, 'dead_letter' => false],
                 'berthq-audit' => ['driver' => 'berthq', 'url' => $url, 'queue' => $this->queueName, 'wait' => 0, 'consumer' => 'audit', 'worker' => 'audit-1'],
-                'berthq-auto' => ['driver' => 'berthq', 'url' => $url, 'queue' => 'unused', 'wait' => 0, 'create_queues' => true],
+                'berthq-auto' => ['driver' => 'berthq', 'url' => $url, 'queue' => 'unused', 'wait' => 0],
+                'berthq-strict' => ['driver' => 'berthq', 'url' => $url, 'queue' => 'unused', 'wait' => 0, 'create_queues' => false],
             ],
         ]]));
         $this->app->instance('queue', new QueueManager($this->app));
@@ -207,7 +208,20 @@ final class BerthqQueueTest extends TestCase
         $this->assertSame(0, $this->queue()->size());
     }
 
-    public function testCreateQueuesCreatesAMissingQueueOnFirstPush(): void
+    public function testTheServiceProviderAddsABerthqConnectionWhenTheAppHasNone(): void
+    {
+        $app = new Container();
+        $app->instance('config', new Repository(['queue' => ['connections' => []]]));
+        (new BerthqServiceProvider($app))->register();
+
+        $this->assertSame(
+            ['driver' => 'berthq', 'url' => 'http://127.0.0.1:7331', 'key' => null, 'queue' => 'default', 'wait' => 3],
+            $app['config']->get('queue.connections.berthq'),
+        );
+        $this->assertSame($this->queueName, $this->app['config']->get('queue.connections.berthq.queue'), 'an app connection wins');
+    }
+
+    public function testAMissingQueueIsCreatedOnFirstPush(): void
     {
         $name = 'laravel-auto-' . bin2hex(random_bytes(6));
         $queue = $this->queue('berthq-auto');
@@ -219,10 +233,10 @@ final class BerthqQueueTest extends TestCase
         $this->assertSame(1, $queue->size($name));
     }
 
-    public function testAMissingQueueFailsLoudlyByDefault(): void
+    public function testAMissingQueueFailsWhenCreateQueuesIsOff(): void
     {
         $this->expectException(\Berthq\BerthqException::class);
-        $this->queue()->push(new SendEmail('ada@example.com'), '', 'missing-' . bin2hex(random_bytes(4)));
+        $this->queue('berthq-strict')->push(new SendEmail('ada@example.com'), '', 'missing-' . bin2hex(random_bytes(4)));
     }
 
     private function queue(string $connection = 'berthq'): BerthqQueue

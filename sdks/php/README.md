@@ -167,8 +167,22 @@ redelivered) is not an error: it is listed in `Settled::$unknown`.
 
 ## Laravel
 
-Laravel 11 and 12. The service provider is auto-discovered and registers the `berthq` queue
-driver. Add a connection to `config/queue.php`:
+Laravel 11, 12 and 13. The service provider is auto-discovered and registers the `berthq` queue
+driver and a `berthq` connection, so after `composer require` one line in `.env` is enough:
+
+```sh
+QUEUE_CONNECTION=berthq
+# BERTHQ_URL=http://127.0.0.1:7331  BERTHQ_API_KEY=...  BERTHQ_QUEUE=default
+```
+
+Start a worker. The queue is created on the first dispatch or the first poll:
+
+```sh
+php artisan queue:work --sleep=0
+```
+
+To change any option below, add the connection to `config/queue.php`; it then replaces the
+built-in one:
 
 ```php
 'connections' => [
@@ -180,13 +194,6 @@ driver. Add a connection to `config/queue.php`:
         'wait' => 3,
     ],
 ],
-```
-
-Set `QUEUE_CONNECTION=berthq`, create the queue and start a worker:
-
-```sh
-berthq queue create default --max-attempts 0
-php artisan queue:work berthq --sleep=0
 ```
 
 Jobs, `dispatch()`, `->delay()`, `$this->release()`, `$tries`, `$backoff`,
@@ -203,13 +210,14 @@ as JSON objects, so the dashboard shows each job's class and data.
 | `consumer`      | `default`     | The consumer all workers of this connection share (see below)                      |
 | `worker`        | `host:pid`    | Worker name shown in the dashboard                                                 |
 | `dead_letter`   | `true`        | Keep failed jobs in `<queue>.dlq` (`true`) or delete them (`false`)                |
-| `create_queues` | `false`       | Create a missing berthq queue on first push or pop instead of throwing `notFound`  |
+| `create_queues` | `true`        | Create a missing berthq queue on first push or pop (`false`: throw `notFound`)     |
 | `after_commit`  | `false`       | Dispatch jobs after the open database transaction commits                          |
 
 **API keys.** A key can hold several scopes, joined with `+`. A typical app that dispatches and
 works jobs uses `berthq start --api-key publish+consume+read:KEY`; a process that only
 dispatches can use a `publish` key, a worker that only runs jobs a `consume` key. `size()` and
-`queue:monitor` need `read`; `queue:clear` and `create_queues` need an admin key.
+`queue:monitor` need `read`; `queue:clear` and creating a missing queue need an admin key, so
+with narrower keys create the queues up front (see below).
 
 **Consumers.** All workers of a connection share one consumer (`default`), so each job runs once.
 A second app that wants every job of the same queue too (an audit log, a search index) uses a
@@ -239,8 +247,8 @@ Both Laravel and the broker can retry, and they must not fight. The recommended 
   reset; `php artisan queue:retry` works from `failed_jobs` as always.
 
 With the broker's default `maxAttempts` of 5, the broker would dead-letter a job on its fifth
-delivery even if the job has `$tries = 10`, without Laravel running `failed()`. Hence
-`--max-attempts 0` when creating the queue.
+delivery even if the job has `$tries = 10`, without Laravel running `failed()`. Queues the driver
+creates get `maxAttempts` 0; create your own with `--max-attempts 0`.
 
 ### Speed
 
@@ -251,13 +259,14 @@ be lost and the job run again.
 
 ### Creating queues
 
-Berthq queues are created explicitly, like tables: `berthq queue create default
---max-attempts 0` (or `Client::queuesCreate()` in a migration or deploy script). Pushing to a
-missing queue throws a `BerthqException` with kind `notFound`, so a typo in a queue name fails
-loudly instead of silently creating a queue no worker listens to.
+Like Laravel's Redis and database drivers, the driver creates a queue on first use: a push or
+pop that gets `notFound` creates it with `maxAttempts` 0 and tries once more. That needs an
+admin key (or no keys).
 
-If you prefer queues to appear on first use, set `'create_queues' => true`: a push or pop that
-gets `notFound` creates the queue with `maxAttempts` 0 and tries once more.
+To create queues explicitly instead, like tables, set `'create_queues' => false` and run
+`berthq queue create default --max-attempts 0` (or `Client::queuesCreate()` in a migration or
+deploy script). Pushing to a missing queue then throws a `BerthqException` with kind `notFound`,
+so a typo in a queue name fails loudly instead of creating a queue no worker listens to.
 
 ### Using the client in a Laravel app
 

@@ -240,18 +240,12 @@ await publisher.close();
 | Go                     | `go get github.com/talovicnedim/berthq/sdks/go` ([docs](sdks/go)) |
 | Rust                   | `cargo add berthq-client` ([docs](sdks/rust))                     |
 
-Laravel workers use the `berthq` queue driver:
+Laravel apps use the `berthq` queue driver. After `composer require`, set it in `.env` and run
+`php artisan queue:work`; queues are created on first use:
 
-```php
-// config/queue.php
-'connections' => [
-    'berthq' => [
-        'driver' => 'berthq',
-        'url' => env('BERTHQ_URL', 'http://127.0.0.1:7331'),
-        'key' => env('BERTHQ_API_KEY'),
-        'queue' => env('BERTHQ_QUEUE', 'default'),
-    ],
-],
+```sh
+QUEUE_CONNECTION=berthq
+BERTHQ_URL=http://127.0.0.1:7331   # the default
 ```
 
 ### Deduplication (`dedupId`)
@@ -332,8 +326,9 @@ routing, RabbitMQ is still the right tool.
 
 ### Can I use Berthq as a Laravel queue driver?
 
-Yes. The [PHP SDK](sdks/php) registers a `berthq` queue driver for Laravel 11 and 12. Add a
-connection to `config/queue.php` and run your workers with `php artisan queue:work berthq`.
+Yes. The [PHP SDK](sdks/php) registers a `berthq` queue driver for Laravel 11, 12 and 13.
+`composer require talovicnedim/berthq-client`, set `QUEUE_CONNECTION=berthq` and run
+`php artisan queue:work`.
 
 ### Does Berthq lose messages if it crashes?
 

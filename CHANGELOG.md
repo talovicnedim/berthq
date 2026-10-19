@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- PHP SDK: the Laravel driver adds a `berthq` connection from the `BERTHQ_*` env vars, so
+  `QUEUE_CONNECTION=berthq` is all an app needs; a connection in `config/queue.php` still
+  replaces it
+- PHP SDK: `create_queues` is on by default, like Laravel's Redis and database drivers; set it
+  to `false` to create queues explicitly
+- PHP SDK: Laravel 13 support (tested on Laravel 11, 12 and 13)
+
 ## 0.1.0 (2026-10-18)
 
 First public release.
